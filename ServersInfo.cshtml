@@ -1,0 +1,1218 @@
+﻿@using CommLib
+@using GeoCloudHome.App_Start
+@using GeoCloudHome.Models
+@using LitJson;
+@using GeoCloudHome.Models.ViewModels.Users;
+
+@{
+    ViewBag.Title = "业务信息";
+    Layout = "~/Views/Shared/_LayoutMng2.cshtml";
+    var i = 1;
+   
+}
+
+@{
+    if (SiteConfig.GetTblSiteConfig(Request.Url.Host).SiteIsEnable == (int)CommEnums.YesOrNo.No &&
+          SiteConfig.GetTblSiteConfig(Request.Url.Host).SiteIsEnable == (int)CommEnums.YesOrNo.No)
+    {
+   
+    <html>
+    <head>
+        <style>
+            body {
+                background: url(/Content/Images/tmp/bk.png) no-repeat;
+            }
+
+            .title {
+                font-size: 3rem;
+                font-weight: bold;
+                margin-left: 1.5rem;
+                margin-top: 1rem;
+                margin-bottom: 2rem;
+                color: #666;
+            }
+
+            .introduce {
+                font-size: 2rem;
+                font-weight: bold;
+                margin-bottom: 3rem;
+                color: #666;
+                text-align: center;
+                margin-left: -1rem;
+            }
+
+            .introduce2 {
+                font-size: 2rem;
+                font-weight: bold;
+                margin-bottom: 1rem;
+                color: #666;
+                text-align: center;
+                margin-left: -1rem;
+            }
+
+            span {
+                font-weight: bold;
+                font-size: 20px;
+                color: #666;
+            }
+
+            .am-padding {
+                margin-bottom: 2rem;
+            }
+
+                .am-padding .am-fl {
+                    text-align: center;
+                    float: none;
+                }
+
+            .am-fl strong {
+                font-size: 2.3rem;
+                font-weight: 100;
+            }
+
+            strong a {
+                color: #666;
+            }
+
+            .am-g {
+                margin: 0 auto;
+                width: 100%;
+                text-align: center;
+            }
+
+            .form-group {
+                color: #666;
+            }
+        </style>
+
+    </head>
+    <body>
+        <div class="g_wrap" style="padding-bottom: 8rem;">
+            <div class="am-cf am-padding">
+                <div class="am-fl am-cf" style="text-align: center; margin-top: 6%;">
+                    <strong class="am-text-primary am-text-lg">
+                        <a href="~/home/Index">感谢您关注创业软件多学科远程诊断平台系列产品</a>
+                    </strong>
+                </div>
+            </div>
+            <div class="am-g">
+                <div class="introduce2">平台试用期已过，如需继续使用请联系:</div>
+                <div class="introduce2"></div>
+                <div class="introduce">创业软件MDT事业部</div>
+                <div style="margin-bottom: 2rem; text-align: center">
+                    <p>
+                        <span>市场联系人：</span>
+                        <span>李&nbsp;&nbsp;&nbsp;健&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;13777447822</span>
+                    </p>
+                    <p style="margin-left: 120px;">
+                        <span></span>
+                        <span style="margin-left: 7px;">陈&nbsp;&nbsp;&nbsp;燕&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;13616538606</span>
+                    </p>
+                </div>
+                <div>
+                    <div class="form-group" style="text-align: center; margin-left: 0rem;">
+                        <span>技术联系人：</span>
+                        <span>王鑫鑫&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;15088688950</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+    </html>
+    }
+    else
+    {
+    <html>
+    <head>
+        <style type="text/css">
+            body input[type="checkbox"] {
+                zoom: 170%;
+                vertical-align: middle;
+                margin-top: -3px;
+            }
+
+            .am-g {
+                padding-left: 1.1rem;
+            }
+
+            .table tr td {
+                text-align: center;
+                border: none;
+            }
+
+            .am-table > tbody > tr > td, .am-table > tbody > tr > th, .am-table > tfoot > tr > td, .am-table > tfoot > tr > th, .am-table > thead > tr > td, .am-table > thead > tr > th {
+                padding: 0px;
+                border-top: 0px;
+            }
+
+            #AddServer, #AddAssociate {
+                /*right: 100px;
+                font-size: 4rem;
+                margin-top: -5.5rem;*/
+                right: 100px;
+                /* font-size: 4rem; */
+                margin-top: -3.8rem;
+            }
+
+                #AddServer, #AddAssociate:hover {
+                    cursor: pointer;
+                }
+
+            div[class*="head"] {
+                /*background-color: rgba(14, 120, 210, 0.14);*/
+                background-color: rgb(230, 230, 230);
+                /*border-bottom: 1px solid #f7f5f5;*/
+            }
+
+            .am-modal-bd ul {
+                max-height: 250px;
+                overflow: auto;
+            }
+
+                .am-modal-bd ul li span {
+                    float: left;
+                }
+
+                .am-modal-bd ul li button {
+                    background: rgba(0, 0, 0, 0.00);
+                    /*position: absolute;
+                right: 2%;*/
+                    float: right;
+                }
+
+                .am-modal-bd ul li {
+                    margin-bottom: 2%;
+                }
+
+            table.am-g tr td {
+                padding: 1%;
+                padding-right: 6%;
+            }
+
+            .server_div_body ul li {
+                display: inline;
+                /*text-align: center;*/
+                margin-bottom: 2%;
+            }
+
+                .server_div_body ul li span {
+                    display: block;
+                    width: 80%;
+                    margin-left: 2%;
+                    margin-right: 2%;
+                    /*background-color: rgba(195, 193, 193, 0.25);*/
+                }
+
+                    .server_div_body ul li span b {
+                        cursor: pointer;
+                    }
+
+                    .server_div_body ul li span i {
+                        color: red;
+                        cursor: pointer;
+                        /*float: right;
+                        margin-right: 5%;*/
+                        position: absolute;
+                        top: -10px;
+                    }
+
+            .associate_div_body ul li button {
+                position: absolute;
+                right: 1%;
+            }
+
+            .associate_div_body ul li span {
+                position: absolute;
+                left: 4%;
+            }
+
+            .associate_div_body ul li {
+                margin-top: 2%;
+            }
+
+            .am-table {
+                margin-bottom: 0rem;
+            }
+
+            input.btn_submitAddServerForm, input.btn_resetAddServerForm {
+                width: 50%;
+                background-color: #FFF;
+                border-top: 0;
+                border-bottom: 0;
+            }
+            /*#RelateCloud,#SelectServerModel {
+                display: block;
+                position: fixed;
+                height: 50%;
+                width: 70%;
+                overflow: auto;
+            }*/
+            /*.am-modal {
+                display: block;
+                position: fixed;
+                height: 50%;
+                width: 70%;
+                overflow: auto;
+            }*/
+            /*div[class*="head"] span {
+                font-size: 1.4rem;
+                color: rgb(14, 144, 210);
+                position: absolute;
+                right: 0px;
+            }*/
+            .addtemplatemodalbody div {
+                float: left;
+                height: 320px;
+                border: 1px groove rgba(128, 128, 128, 0.24);
+                overflow: auto;
+            }
+
+            .addtemplatemodalbody .left {
+                width: 30%;
+            }
+
+            .addtemplatemodalbody .center {
+                width: 30%;
+            }
+
+            .addtemplatemodalbody .right {
+                width: 40%;
+            }
+
+            .addtemplatemodalbody {
+                margin-top: 3%;
+            }
+
+                .addtemplatemodalbody ul li {
+                    list-style: none;
+                }
+
+                .addtemplatemodalbody ul {
+                    padding-left: 0;
+                }
+
+            .template-bd {
+                padding-bottom: 5%;
+            }
+        </style>
+        <link rel="stylesheet" type="text/css" href="~/Content/css/sersinfo.css" />
+    </head>
+    <body>
+        <div class="am-g">
+
+            <input type="hidden" id="siteConfigID" name="siteConfigID"  value=@ViewBag.siteConfigID/>
+            <div class="check_div ">
+                <div class="check_div_head">
+                    <h5>检查项目</h5>
+                </div>
+                <table class="am-table table_check" frame="void" style="max-height: 135px; overflow: auto;">
+                    <tbody>
+                    </tbody>
+                    
+                </table>
+            </div>
+
+            <div class="application_div">
+                <div class="application_div_head">
+                    <h5>平台应用</h5>
+                </div>
+                <table class="am-table table_check" frame="void">
+                    @foreach (var node in JsonMapper.ToObject(ViewBag.zNodes))
+                    {
+
+
+                        if ((Int32)node["level"] == 0)
+                        {
+
+                            var nodeId = node["id"].ToString().Trim();
+                            if (i % 4 == 1)
+                            {<tr></tr>
+                        <td>
+                            <input type="checkbox" name="Application" id=@nodeId />
+                            <label for=@nodeId>@node["name"]</label></td>
+                            }
+                            else
+                            {
+            
+                        <td>
+                            <input type="checkbox" name="Application" id=@nodeId />
+                            <label for=@nodeId>@node["name"]</label></td>
+                            }
+                            i++;
+                        }
+                    }
+                    @*
+                <tr>
+                    <td>
+                        <input type="checkbox" name="Application" id="Consultation" />
+                        <label for="Consultation">会诊</label></td>
+                    <td>
+                        <input type="checkbox" name="Application" id="Read" />
+                        <label for="Read">读片会</label></td>
+                </tr>
+                *@
+                </table>
+            </div>
+
+            <div class="server_div">
+                <div class="server_div_head">
+                    <h5>业务范围</h5>
+                    <a id="AddServer" class="am-fr" onclick="SelectServer()">添加</a>
+
+                    @*<span class="am-btn" id="AddServer" onclick="SelectServer()">添加</span>*@
+                </div>
+                <div class="server_div_body">
+                    <ul class=" am-g">
+                        @foreach (var server in ViewBag.serverlist)
+                        { 
+                            <li class="am-u-sm-3 am-u-end"><span><b>@server</b><i class="delete">&times;</i> </span></li>
+                        }
+                        @* <li class="am-u-sm-4"><span><b>1</b><i class="delete">删除</i> </span></li>
+                        <li class="am-u-sm-4"><span><b>2</b><i class="delete">删除</i></span> </li>
+                        <li class="am-u-sm-4"><span><b>3</b><i class="delete">删除</i></span> </li>*@
+                    </ul>
+                </div>
+
+            </div>
+
+            <div class="associate_div">
+                <div class="associate_div_head">
+                    <h5>关联云</h5>
+                    <a id="AddAssociate" class="am-fr" onclick="RelateCloud()">添加</a>
+                </div>
+                <div class="associate_div_body">
+                    <ul class="am-g">
+                        @foreach (var siteconfig in ViewBag.sitelinklist)
+                        { 
+                            <li><span class="associate_item">@siteconfig</span>
+                                <button class="btn_delete_associate">&times;</button>
+                            </li>
+                        }
+                    </ul>
+                </div>
+
+            </div>
+        </div>
+
+
+
+        @*选择业务*@
+        <form name="SelectServerForm" id="SelectServerForm" method="POST">
+            <div class="am-modal am-form am-modal-confirm" id="SelectServerModel" name="SelectServerModel" tabindex="-1">
+                <div class="am-modal-dialog">
+                    <div class="am-modal-hd am-back-primary">
+                        <div class="am-input-group am-input-group-sm">
+                            <h4>选择业务</h4>
+                        </div>
+                        <a href="javascript: void(0)" class="am-close am-close-alt" data-am-modal-close="">&times;</a>
+                    </div>
+                    <div class="am-modal-bd selectserver">
+                        <ul style="list-style-type: square">
+                            @foreach (var server in ViewBag.serviceName)
+                            { 
+                                <li><span>@server.servicename</span>
+                                    <button>+</button></li>
+                            }
+                        </ul>
+                    </div>
+                    <div class="am-modal-footer">
+                        <span class="am-modal-btn" onclick="AddServerModal()">添加新业务</span>
+                    </div>
+                </div>
+            </div>
+        </form>
+        @*添加新业务*@
+        <form class="cmxform" name="AddServerForm" id="AddServerForm" method="POST" action="">
+            <div class="am-modal am-form am-modal-confirm" id="AddServerModel" name="AddServerModel" tabindex="-1">
+                <div class="am-modal-dialog">
+                    <div class="am-modal-hd am-back-primary">
+                        <div class="am-input-group am-input-group-sm">
+                            <h4>添加新业务</h4>
+                        </div>
+                        <a href="javascript: void(0)" class="am-close am-close-alt" data-am-modal-close="">&times;</a>
+                    </div>
+                    <div class="am-modal-bd">
+                        <table class="am-g">
+                            <tr>
+                                <td>
+                                    <label for="ServerName">名称：</label></td>
+                                <td>
+                                    <input type="text" id="ServerName" name="ServerName" /></td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label>分类：</label></td>
+                                <td>
+                                    <input type="radio" id="ServerClass1" name="ServerClass" value="专科诊断" /><label for="ServerClass1" style="margin-right: 10%;">专科诊断</label>
+                                    <input type="radio" id="ServerClass2" name="ServerClass" value="病种诊断" /><label for="ServerClass2">病种诊断</label>
+                                </td>
+                            </tr>
+                            @*<tr>
+                                <td>
+                                    <label for="ServerModul">模板：</label></td>
+                                <td>
+                                    <input type="text" id="ServerModul" name="ServerModul" value="新建模板" style="cursor: pointer" onclick="AddTemplate();" /></td>
+                            </tr>*@
+                            <tr>
+                                <td>
+                                    <label for="ServerDescription">说明：</label></td>
+                                <td>
+                                    <textarea id="ServerDescription" name="ServerDescription" style="height: 10rem"></textarea>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <div class="am-modal-footer">
+                        <input type="submit" class="am-modal-btn btn_submitAddServerForm submit" value="确定" data-am-modal-confirm />
+                        <input type="reset" class="am-modal-btn btn_resetAddServerForm" value="取消" data-am-modal-cancel />
+                    </div>
+                </div>
+            </div>
+        </form>
+                @*创建业务模板*@
+        <div class="am-modal am-modal-prompt" id="AddTemplateModal" style="width: 800px; left: 40%; position: absolute; top: 30%;">
+            <div class="am-modal-dialog">
+                <div class="am-modal-hd">
+                    <h4 class="am-modal-title">创建业务模板</h4>
+                    <p>MDT模板</p>
+                    <span data-am-modal-close class="am-close">&times;</span>
+                    <input type="hidden" id="addcheckType" class="am-modal-prompt-input">
+                </div>
+                <div class="am-modal-bd" style="max-height: 500px; overflow: auto;">
+                    <div class="addtemplatemodalbody">
+                        <div class="am-u-sm-12 am-u-md-2 am-u-lg-2" style="border-right: 2px dashed #b9b5b5;">
+                            <div id="leftList"></div>
+                            <div id="loadImg">
+                                <img src="~/Content/Images/ab_loading.gif" />
+                            </div>
+                        </div>
+                        <div id="centerList" class="am-u-sm-12 am-u-md-6 am-u-lg-6" style="border-right: 2px dashed #b9b5b5;"></div>
+                        <div class="am-u-sm-12 am-u-md-4 am-u-lg-4">
+                            <div id="rightList"></div>
+                            <div id="loadImg2">
+                                <img src="~/Content/Images/ab_loading.gif" />
+                            </div>
+                            <div class="addbt am-form-group" style="text-align: right;">
+                                <button type="button" class="addBtn am-btn">提交</button>
+                                <button type="button" class="editBtn am-btn" style="display: none;">保存</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @*关联云*@
+        <form name="RelateCloudForm" id="RelateCloudForm" method="POST">
+            <div class="am-modal am-form am-modal-confirm" id="RelateCloud" name="RelateCloud" tabindex="-1">
+                <div class="am-modal-dialog">
+                    <div class="am-modal-hd am-back-primary">
+                        <div class="am-input-group am-input-group-sm">
+                            <h4>选择关联云</h4>
+                        </div>
+                        <a href="javascript: void(0)" class="am-close am-close-alt" data-am-modal-close="">&times;</a>
+                    </div>
+                    <div class="am-modal-bd relatecloud">
+                        <ul style="list-style-type: square">
+
+                            @foreach (var siteconfig in ViewBag.siteconfig)
+                            { 
+                                <li><span>@siteconfig.SiteName</span>
+                                    <button>+</button>
+                                </li>
+                            }
+                        </ul>
+                    </div>
+                    <div class="am-modal-footer">
+                        <span class="am-modal-btn" onclick="">确定</span>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <script src="~/Content/js/template.js"></script>
+
+        @*获取原型*@
+        <script type="text/html" id="YuanTemplate">
+            <p>所有原型：</p>
+            {{each data as list}}
+                    <p style="font-size: 14px;">
+                        <span class="m_tag" data-id="{{list.id}}" style="color: #3d82c5; cursor: pointer;">{{list.name}}</span>
+                    </p>
+            {{/each}}
+        </script>
+        @*点击原型，获取对应模板*@
+        <script type="text/html" id="centerTemplate">
+            <p>选择模板：</p>
+            {{if data.length != 0}}
+                    {{each data as data}}
+                        <div class="am-panel-group" id="accordion{{data.id}}">
+                            <div class="am-panel am-panel-default">
+                                <div class="check_title am-panel-hd" data-id="{{data.id}}">
+                                    <input type="checkbox" class="m_select" value="{{data.id}}" style="float: left; margin-top: 1px;" />
+                                    <span class="am-panel-title" style="font-size: 13px;">{{data.name}}</span>
+                                    <span class="am-icon-check-circle nocurrent" data-id="{{data.id}}"></span>
+                                    <span class="am-icon-check-circle current" style="display: none;" data-id="{{data.id}}"></span>
+                                </div>
+                                <div class="am-panel-am-ulapse am-am-ulapse am-in" style="display: none">
+                                    <div class="am-panel-bd">
+                                        <form id="checkForm" class="am-form-horizontal" style="padding-top: 10px;"></form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+            {{/each}}
+                {{else}}
+                    <p>该原型下暂无模板</p>
+            {{/if}}
+        </script>
+        @*点击模板，获取对应模板内容*@
+        <script type="text/html" id="contentTemplate">
+            {{each data as obj}}
+                    <div class="am-form-group group_info">
+                        <label for="name" class="am-form-label" style="width: 100%; text-align: left;">{{obj.name}}：</label>
+                        <div class="">
+                            {{if obj.type == "2"}}
+                                <select id="select{{obj.id}}" name="{{obj.id}}">
+                                    {{each obj.selects as value}}
+                                        <option value="{{value}}">{{value}}</option>
+                                    {{/each}}
+                                </select>
+                            {{else if obj.type == "4"}}
+                                <input type="text" name="{{obj.id}}" type="text" id="inp{{obj.id}}" class="dataTime am-form-field am-input-sm form-datetime" />
+                            {{else if obj.type == "0"}}
+                                <textarea id="text{{obj.id}}" name="{{obj.id}}" style="max-width: 100%; min-height: 60px;"></textarea>
+                            {{else if obj.type == "1"}}
+                                <input type="text" id="id{{obj.id}}" name="{{obj.id}}" class="am-form-field" />
+                            {{else if obj.type == "3"}}
+                                <input type="checkbox" id="check{{obj.id}}" name="{{obj.id}}" />
+                            {{else if obj.type == "5"}}
+                                <button type="button" class="am-btn am-btn-primary am-icon-plus"></button>
+                            {{/if}}
+                        </div>
+                    </div>
+            {{/each}}
+        </script>
+        @*获取添加了的模板*@
+        <script type="text/html" id="rightTemplate">
+            <p>已有模板：</p>
+            {{if data.length != 0}}
+                    {{each data as value}}
+                        <p value="{{value.id}}">
+                            <span>{{value.name}}</span>
+                            <button type="button" class="m_remove am-btn am-btn-primary am-btn-xs am-icon-trash"></button>
+                            <button type="button" class="m_up am-btn am-btn-primary am-btn-xs am-icon-arrow-up"></button>
+                            <button type="button" class="m_down am-btn am-btn-primary am-btn-xs am-icon-arrow-down"></button>
+                        </p>
+            {{/each}}
+                {{/if}}
+        </script>
+
+        <script type="text/javascript">
+            /*相关模态窗口的钩子*/
+            function SelectServer() {
+                $('#SelectServerModel').modal({
+                    relatedElement: this,
+                    onConfirm: function () {
+
+                    },
+                    onCancel: function () {
+
+                    }
+                });
+            }
+
+            function AddServerModal() {
+                $('#AddServerModel').modal({
+                    relatedElement: this,
+                    onConfirm: function () {
+                        //alert($("input[name = 'ServerName']").val() == '');
+                        //alert($("input[name='ServerClass']:checked").length);
+                        if (!($("input[name = 'ServerName']").val() == '' || $("input[name='#ServerDescription']").val() == '' || $("input[name='ServerClass']:checked").length == 0)) {
+                            $("#AddServerForm").validate({
+                                submitHandler: function (form) {
+                                    var opt = {
+                                        url: "/MngCloud/AjaxServersInfo",
+                                        success: function (data) {
+                                            if (data.message1 == "成功") {
+                                                //alert("保存成功！");
+                                                console.log("   ===" + data.message2);
+
+                                                $("#AddTemplateModal").attr("serviced", data.message2);
+                                                //rightonit();
+                                                AddServerObj();
+                                                $('#AddServerForm')[0].reset();
+                                            }
+                                        },
+                                        error: function (data) {
+                                            $('#AddServerForm').reset();
+                                            var $modalAlert = $('#my-alert');
+                                            $modalAlert.find("div.am-modal-bd").html(data.message);
+                                            $modalAlert.modal({
+                                                onConfirm: function (options) {
+                                                    //SelectServer();
+                                                }
+                                            });
+
+                                        }
+                                    };
+                                    $('#AddServerForm').ajaxSubmit(opt);
+                                    return false;
+                                }
+                            });
+                            $('#AddServerForm').submit();
+                            $("#SelectServerForm").hide();
+                            $("#AddTemplateModal").modal("open");
+                            SelectServer();
+                            // AddTemplate();
+                            //$('#AddServerForm').submit();
+                            //SelectServer();
+                        }
+                        else {
+                            var $modalAlert = $('#my-alert');
+                            $modalAlert.find("div.am-modal-bd").html("请完善业务信息！");
+                            $modalAlert.modal({
+                                onConfirm: function (options) {
+                                    AddServerModal();
+                                }
+                            });
+                        }
+                    },
+                    onCancel: function () {
+                        $('#AddServerForm')[0].reset();
+                        SelectServer();
+                    }
+                });
+            }
+            function RelateCloud() {
+                $('#RelateCloud').modal({
+                    relatedElement: this,
+                    onConfirm: function () {
+
+                    },
+                    onCancel: function () {
+
+                    }
+                });
+            }
+            function ShowDelete() { $(this).find(".delete").css('display', 'inline'); }
+            function HideDelete() { $(this).find(".delete").hide(); }
+            function AddServer() {
+                $that = $(this).parent().children().first().text();
+                $new = $("<li class='am-u-sm-3'><span><b>" + $that + "</b><i class='delete'>&times;</i> </span></li>");
+                $(this).parent().remove();
+                $id = parseInt($("#siteConfigID").val());
+                $.ajax({
+                    type: 'post',
+                    data: { ServiceName: $that, siteConfigID: $id },
+                    //url: "/MngCloud/InstitutionInfoAjax?InstitutionName=" + $text,
+                    url: "/MngCloud/AddServiceAjax",
+                    success: function (data) {
+                        if (data.message != "cantadd") {
+                            $(".server_div_body ul").append($new);
+                            $(".server_div_body ul").children().last().addClass("am-u-end");
+                            $(".delete").hide();
+                            $(".server_div_body").find("span").on("mouseenter", ShowDelete);
+                            $(".server_div_body").find("span").on("mouseleave", HideDelete);
+                            $(".server_div_body span .delete").unbind().on("click", RemoveServer);
+                            $(".server_div_body ul li span b").unbind().on("click", EditModel);
+                            //$("#tab_iframe3", window.parent.document).attr('src', '');
+                            $("#tab_iframe3", window.parent.document).attr('src', $("#tab_iframe3", window.parent.document).attr('src'));
+                        }
+                    },
+                    error: function (data) {
+                        alert('发生未知错误！');
+                    }
+
+                })
+
+            }
+            function changear(id, name) {
+                var siteid = "@ViewBag.siteConfigID";
+                $.post("/mngcloud/changear", { id: id, siteid: siteid, name: name }, function (res) {
+                    if (res.Success) {
+                        layer.msg("修改成功");
+                    }
+                    else {
+                        layer.msg(res.Message);
+                    }
+                }, "json");
+            }
+            function RemoveServer() {
+                if (confirm("确认删除？")) {
+                    $text = $(this).parent().children().first().text();
+                    $parent = $(this).parent().parent().parent();
+                    $(this).parent().parent().remove();
+                    $id = parseInt($("#siteConfigID").val());
+                    $.ajax({
+                        type: 'post',
+                        data: { ServiceName: $text, siteConfigID: $id },
+                        //url: "/MngCloud/InstitutionInfoAjax?InstitutionName=" + $text,
+                        url: "/MngCloud/DeleteServiceAjax",
+                        success: function (data) {
+                            if (data.message != "cantadd") {
+                                $(".selectserver ul").append("<li><span>" + $text + "</span><button>+</button></li>");
+                                $parent.children().last().addClass("am-u-end");
+                                $(".selectserver ul li button").unbind('click').on("click", AddServer);
+                                $("#tab_iframe3", window.parent.document).attr('src', $("#tab_iframe3", window.parent.document).attr('src'));
+                            }
+                        },
+                        error: function (data) {
+                            alert('发生未知错误！');
+                        }
+
+                    })
+
+                }
+            }
+            function RemoveAssociate() {
+                $text = $(this).parent().children().first().text();
+                if (confirm("确认删除？")) {
+                    $(this).parent().remove();
+                    $id = parseInt($("#siteConfigID").val());
+                    $.ajax({
+                        type: 'post',
+                        data: { SiteName: $text, siteConfigID: $id },
+                        //url: "/MngCloud/InstitutionInfoAjax?InstitutionName=" + $text,
+                        url: "/MngCloud/DeleteRelateCloud",
+                        success: function (data) {
+                            if (data.message != "cantadd") {
+                                $(".relatecloud ul").append("<li><span>" + $text + "</span><button>+</button></li>");
+                                $(".relatecloud ul li button").unbind('click').on("click", AddRelateCloud);
+                                $("#tab_iframe3", window.parent.document).attr('src', $("#tab_iframe3", window.parent.document).attr('src'));
+                            }
+                        },
+                        error: function (data) {
+                            alert('发生未知错误！');
+                        }
+
+                    })
+
+                }
+            }
+            function AddRelateCloud() {
+                $that = $(this).parent().children().first().text();
+                $new = $("<li><span>" + $that + "</span><button  class='btn_delete_associate'>&times;</button></li>");
+                $(this).parent().remove();
+                $id = parseInt($("#siteConfigID").val());
+                $.ajax({
+                    type: 'post',
+                    data: { SiteName: $that, siteConfigID: $id },
+                    //url: "/MngCloud/InstitutionInfoAjax?InstitutionName=" + $text,
+                    url: "/MngCloud/AddRelateCloud",
+                    success: function (data) {
+                        if (data.message != "cantadd") {
+                            $(".associate_div_body ul").append($new);
+                            $(".btn_delete_associate").unbind().on("click", RemoveAssociate);
+                            $("#tab_iframe3", window.parent.document).attr('src', $("#tab_iframe3", window.parent.document).attr('src'));
+                        }
+                    },
+                    error: function (data) {
+                        alert('发生未知错误！');
+                    }
+
+                })
+
+            }
+
+            function AddServerObj() {
+                $ServerName = $("input[name = 'ServerName']").val();
+                $(".selectserver ul").append("<li><span>" + $ServerName + "</span><button>+</button></li>");
+                $(".selectserver ul li button").unbind('click').on("click", AddServer);
+            }
+            function EditModel() {
+                AddTemplate();
+            }
+            function LoadCheck() {
+                $id = parseInt($("#siteConfigID").val());
+                $.ajax({
+                    url: "http://10.8.0.66:9002/ehrapi/GetArcheTypeList",
+                    type: "POST",
+                    dataType: "jsonp",
+                    success: function (data) {
+
+                        for (var j = 0; j < data.data.length; j++) {
+                            $cid = "c" + data.data[j].id;
+                            $name = data.data[j].name;
+                            if (j % 4 == 0) $(".check_div table").find("tbody").append("<tr></tr>")
+                            $(".check_div table").find("tbody").append("<td><input type='checkbox' name='CheckItem' id='" + $cid + "' data-id=" + data.data[j].id + "/><label for='" + $cid + "'>" + $name + "</label></td>");
+                        }
+                        $id = parseInt($("#siteConfigID").val());
+                        $.ajax({
+                            url: '/MngCloud/LoadCheckAjax',
+                            data: { siteConfigID: $id },
+                            type: 'POST',
+                            success: function (data) {
+                                $checknode = $(".check_div input[type='checkbox']");
+                                console.log(data);
+                                for (var k = 0; k < data.length; k++) {
+                                    $cid = "c" + data[k];
+                                    $(".check_div input[id=" + $cid + "]").attr('checked', true);
+                                }
+                            },
+                            error: function (e) {
+                                console.log(e);
+                            }
+                        })
+                        $(".check_div input[type='checkbox']").on("change", ChangeCheck);
+
+                    },
+                    error: function (e) {
+                        console.log(e);
+                    }
+                })
+            }
+
+            function ChangeCheck() {
+                $ischecked = $(this).attr("checked");
+                $CheckName = parseInt($(this).data("id"));
+                console.log($CheckName);
+                $id = parseInt($("#siteConfigID").val());
+                $.ajax({
+                    type: 'POST',
+                    url: '/MngCloud/ChangeCheckAjax',
+                    data: { "CheckName": $CheckName, siteConfigID: $id, "IsChecked": $ischecked },
+                    success: function (data) {
+                        console.log(data);
+
+                    },
+                    error: function (e) {
+                        console.log(e);
+                    }
+                })
+            }
+
+            function ChangeRight() {
+                $ischecked = $(this).attr("checked");
+                $RightId = parseInt($(this).attr('id'));
+                console.log($RightId);
+                $id = parseInt($("#siteConfigID").val());
+                $.ajax({
+                    type: 'POST',
+                    url: '/MngCloud/ChangeRightAjax',
+                    data: { "RightId": $RightId, siteConfigID: $id, "IsChecked": $ischecked },
+                    success: function (data) {
+                        console.log(data);
+
+                    },
+                    error: function (e) {
+                        console.log(e);
+                    }
+                })
+
+            }
+
+            function LoadRight() {
+                $id = parseInt($("#siteConfigID").val());
+                $(".application_div input[type='checkbox']").on("change", ChangeRight);
+                $.ajax({
+                    type: 'POST',
+                    url: '/MngCloud/LoadRightAjax',
+                    data: { siteConfigID: $id },
+                    success: function (data) {
+                        $checknode = $(".application_div input[type='checkbox']");
+                        console.log(data);
+                        for (var k = 0; k < data.length; k++) {
+                            $cid = data[k];
+                            $(".application_div input[id=" + $cid + "]").attr('checked', true);
+                        }
+
+
+                    },
+                    error: function (e) {
+                        console.log(e);
+                    }
+                })
+            }
+
+            window.onload = function () {
+
+
+                //   $("server_div_body ul").children().last().addClass("am-u-end");
+                $(".delete").hide();
+                $(".server_div_body").find("span").on("mouseenter", ShowDelete);
+                $(".server_div_body").find("span").on("mouseleave", HideDelete);
+                $(".server_div_body span .delete").on("click", RemoveServer);
+                $(".btn_delete_associate").on("click", RemoveAssociate);
+                $(".relatecloud ul li button").on("click", AddRelateCloud);
+                $(".selectserver ul li button").on("click", AddServer);
+                $(".server_div_body ul li span b").on("click", EditModel);
+                //$("input[type='checkbox']").attr("checked", 'true');
+                LoadCheck();
+                LoadRight();
+
+                //添加业务到页面上
+                //$('#SelectServerModel').on('closed.modal.amui', function () {
+                //    location.href = location.href;
+                //});
+
+                //关闭弹框的反应
+                $('#AddTemplateModal').on('closed.modal.amui', function () {
+                    location.href = location.href;
+                });
+                //打开弹框的反应
+                $('#AddTemplateModal').on('opened.modal.amui', function () {
+                    showYuan();
+                    rightonit();
+                });
+                //获取所有原型
+                function showYuan() {
+                    $.ajax({
+                        url: "http://10.8.0.66:9002/ehrapi/GetArcheTypeList",
+                        type: "get",
+                        dataType: "jsonp",
+                        //async: false,
+                        success: function (result) {
+                            if (result.Success == true) {
+                                $("#loadImg").hide();
+                                var htmlmodel = template("YuanTemplate", result);
+                                document.getElementById("leftList").innerHTML = htmlmodel;
+                            }
+                        },
+                        beforeSend: function () {
+                            $("#loadImg").show();
+                            //console.log("正在加载....");
+                        },
+                        complete: function () {
+                            $("#loadImg").hide();
+                        },
+                        error: function (result, XMLHttpRequest, textStatus, errorThrown) {
+                            $("#loadImg").hide();
+                            console.log("222::::" + JSON.stringify(result));
+                        }
+                    });
+                }
+
+                //编辑业务范围
+                $("#loadImg").hide();
+                $(document).on("click", ".m_edit", function () {
+                    var value = $(this).attr("data-id");
+                    $('#AddTemplateModal').modal('open');
+                    $('#AddTemplateModal').attr('serviced', value);
+                    showYuan();
+                });
+                //点击原型名称，展示对应模板
+                $(document).on("click", ".m_tag", function () {
+                    //rightonit();
+                    $(this).parent("p").addClass("pcur");
+                    $(this).parent("p").siblings("p").removeClass("pcur");
+                    var value = $(this).attr("data-id");
+                    var local = window.location.host;
+                    var host = decodeURIComponent(local);
+                    //alert("host======" + host);
+                    $.ajax({
+                        url: "http://10.8.0.66:9002/ehrapi/GetArcheModel?eid=" + value + "&host=" + host,
+                        type: "get",
+                        dataType: "jsonp",
+                        //async: false,
+                        success: function (result) {
+                            if (result.Success == true) {
+                                var htmlmodel = template("centerTemplate", result);
+                                $("#centerList").html(htmlmodel);
+                            }
+                        },
+                        error: function (result, XMLHttpRequest, textStatus, errorThrown) {
+                            console.log("222::::" + JSON.stringify(result));
+                        }
+                    });
+                });
+                //点击模板，展开模板内容
+                $(document).on("click", ".nocurrent", ehc);
+                $(document).on("click", ".current", ehc);
+                function ehc() {
+                    var tag = $(this).parents(".am-panel-group").find(".am-panel-am-ulapse").css("display");
+                    var id = $(this).parents(".check_title").attr("data-id");
+                    var form = $(this).parents(".am-panel-group").find("#checkForm");
+                    //alert("id:::" + id);
+                    if (tag == "none") {
+                        //展示
+                        $.ajax({
+                            url: "http://10.8.0.66:9002/ehrapi/GetModelInfo/" + id,
+                            type: "post",
+                            dataType: "jsonp",
+                            success: function (data) {
+                                if (data.Success == true) {
+                                    // console.log(JSON.stringify(data));
+                                    var htmlmodel = template("contentTemplate", data);
+                                    form.html(htmlmodel);
+
+                                } else {
+                                    form.html(data.Message);
+                                }
+
+                            },
+                            error: function (data, XMLHttpRequest, textStatus, errorThrown) {
+                                console.log("CheckList::::" + JSON.stringify(data));
+                            }
+                        });
+                        $(this).parents(".am-panel-group").find(".am-panel-am-ulapse").show();
+                        $(this).parents(".am-panel-group").siblings(".am-panel-group").find(".am-panel-am-ulapse").hide();
+                    } else {
+                        $(this).removeClass("nocurrent");
+                        $(this).addClass("current");
+                        $(this).parents(".am-panel-group").find(".am-panel-am-ulapse").hide();
+                    }
+                }
+                //获取已添加的模板
+                $("#loadImg2").hide();
+                function rightonit() {
+                    var id = $("#AddTemplateModal").attr("serviced");
+                    //alert(typeof value);
+                    $.ajax({
+                        url: "/Manager/GetServiceModels?serviceid=" + id,
+                        type: "get",
+                        dataType: "json",
+                        success: function (data) {
+                            $("#loadImg2").hide();
+                            //console.log(JSON.stringify(data));
+                            if (data.Success == true) {
+                                var htmlmodel = template("rightTemplate", data);
+                                $("#rightList").html(htmlmodel);
+                                var obj = data.data;
+                                if (obj.length != 0) {
+                                    $(".editBtn").show();
+                                    $(".addBtn").hide();
+                                }
+                            } else {
+                                alert(data.Message);
+                            }
+
+                        },
+                        beforeSend: function () {
+                            $("#loadImg2").show();
+                            //console.log("正在加载....");
+                        },
+                        complete: function () {
+                            $("#loadImg2").hide();
+                        },
+                        error: function (data, XMLHttpRequest, textStatus, errorThrown) {
+                            console.log("CheckList::::" + JSON.stringify(data));
+                        }
+                    });
+                }
+                //打钩选取模板
+                $(document).on("click", ".m_select", function () {
+                    var ff = $(this).prop("checked");
+                    var name = $(this).next(".am-panel-title").text();
+                    var value = $(this).attr("value");
+                    var content = [];
+                    //初始化里已经存在的，不让添加
+                    $("#rightList p").each(function () {
+                        var ids = $(this).attr("value");
+                        content.push(ids);
+                    });
+                    if ($.inArray(value, content) != -1) {
+                        alert("该模板已存在！");
+                        if (ff) {
+                            $(this).attr("checked", false);
+                        } else {
+                            $(this).attr("checked", true);
+                        }
+                        return;
+                    }
+                    if (ff) {
+                        var html = "";
+                        html += '<p value="' + value + '"><span>' + name + '</span>';
+                        html += '<button type="button" class="m_remove am-btn am-btn-primary am-btn-xs am-icon-trash"></button>';
+                        html += '<button type="button" class="m_up am-btn am-btn-primary am-btn-xs am-icon-arrow-up"></button>';
+                        html += '<button type="button" class="m_down am-btn am-btn-primary am-btn-xs am-icon-arrow-down"></button>';
+                        html += '</p>';
+                        $("#rightList").append(html);
+                    }
+                });
+                //上移
+                $(document).on("click", ".m_up", function () {
+                    var id = $(this).parents("p").attr("value");
+                    //console.log("====" + id);
+                    $(this).parents("p").after($(this).parents("p").prev("p"));
+                });
+                //下移
+                $(document).on("click", ".m_down", function () {
+                    var id = $(this).parent("p").attr("value");
+                    $(this).parent("p").before($(this).parent("p").next("p"));
+                });
+                //删除
+                $(document).on("click", ".m_remove", function () {
+                    var id = $(this).parents("p").attr("value");
+                    if (confirm("确定移除？")) {
+                        //alert("已移除！");
+                        $(this).parents("p").remove();
+                    }
+                });
+                //保存已添加的模板
+                $(document).on("click", ".addBtn", function () {
+                    var array = [];
+                    $(this).parents(".addbt").siblings("#rightList").find("p").each(function () {
+                        var value = $(this).attr("value");
+                        array.push(value);
+                    });
+                    var modalsid = array.join("|");
+                    var id = $(this).parents("#AddTemplateModal").attr("serviced");
+                    console.log("modalsid=====" + modalsid);
+                    $.ajax({
+                        url: "/Manager/AddServiceModels?serviceid=" + id + "&models=" + modalsid,
+                        type: "post",
+                        dataType: "json",
+                        success: function (data) {
+                            console.log(JSON.stringify(data));
+                            if (data.Success == true) {
+                                alert("添加成功！");
+                                $(".editBtn").show();
+                                $(".addBtn").hide();
+                                rightonit();
+                                //window.parent.$("#addcheckModal").modal('close');
+                            } else {
+                                alert(data.Message);
+                            }
+
+                        },
+                        error: function (data, XMLHttpRequest, textStatus, errorThrown) {
+                            console.log(JSON.stringify(data));
+                        }
+                    });
+                });
+                //编辑保存
+                $(document).on("click", ".editBtn", function () {
+                    var array = [];
+                    $(this).parents(".addbt").siblings("#rightList").find("p").each(function () {
+                        var value = $(this).attr("value");
+                        array.push(value);
+                    });
+                    var modalsid = array.join("|");
+                    var id = $(this).parents("#AddTemplateModal").attr("serviced");
+                    // console.log("modalsid=====" + modalsid);
+                    $.ajax({
+                        url: "/Manager/EditServiceModels?serviceid=" + id + "&models=" + modalsid,
+                        type: "post",
+                        dataType: "json",
+                        success: function (data) {
+                            //console.log(JSON.stringify(data));
+                            if (data.Success == true) {
+                                alert("添加成功！");
+                                $(".editBtn").show();
+                                rightonit();
+                            } else {
+                                alert(data.Message);
+                            }
+
+                        },
+                        error: function (data, XMLHttpRequest, textStatus, errorThrown) {
+                            console.log(JSON.stringify(data));
+                        }
+                    });
+                });
+
+
+            }
+            //onload end
+
+
+        </script>
+    </body>
+    </html>
+    }
+}
+
+
+
+
